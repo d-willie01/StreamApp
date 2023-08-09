@@ -18,6 +18,11 @@ let localTracks =
     videoTrack: null
 }
 
+let localTrackState = {
+    audioTrackMuted: false,
+    videoTrackMuted: false
+}
+
 //other users tracks to be streamed
 let remoteTracks =
 {
@@ -29,7 +34,57 @@ document.getElementById("join-btn").addEventListener("click", async() =>{
     console.log("User Joined")
 
     await joinStreams()
+    document.getElementById('join-btn').style.display = "none"
+    document.getElementById('footer').style.display = "flex"
 
+})
+
+//this function controls the mute button using the \
+//agora function for muting and audio track
+document.getElementById('mic-btn').addEventListener("click", async() =>{
+    if(!localTrackState.audioTrackMuted) {
+        await localTracks.audioTrack.setMuted(true)
+        localTrackState.audioTrackMuted = true
+        document.getElementById('mic-btn').style.backgroundColor = '#949494'
+    }else {
+        await localTracks.audioTrack.setMuted(false)
+        localTrackState.audioTrackMuted = false
+        document.getElementById('mic-btn').style.backgroundColor = 'aliceblue'
+    }
+})
+
+//same function as muted above only mutes the video file
+document.getElementById('camera-btn').addEventListener("click", async() =>{
+    if(!localTrackState.videoTrackMuted) {
+        await localTracks.videoTrack.setMuted(true)
+        localTrackState.videoTrackMuted = true
+        document.getElementById('camera-btn').style.backgroundColor = '#949494'
+    }else {
+        await localTracks.videoTrack.setMuted(false)
+        localTrackState.videoTrackMuted = false
+        document.getElementById('camera-btn').style.backgroundColor = 'aliceblue'
+    }
+})
+
+
+
+
+document.getElementById("leave-btn").addEventListener("click", async() =>{
+
+    for(trackName in localTracks) {
+        let track = localTracks[trackName]
+        if(track){
+            //stop camera and mic
+            track.stop()
+            //Disconnects from camera and mic
+            track.close()
+            localTracks[trackName] = null
+        }
+    }
+    await client.leave()
+    document.getElementById('user-streams').innerHTML = ""
+    document.getElementById('footer').style.display = "none"
+    document.getElementById('join-btn').style.display = "block"
 })
 
 //function intiating the user first joining a stream
@@ -49,7 +104,8 @@ let joinStreams = async() =>{
 
     //function that is constantly listening for users
     //that are joining the stream / same channel name
-    client.on("user-published", handleUserJoined)
+    client.on("user-published", handleUserJoined);
+    client.on('user-left', handleUserLeft);
 
     console.log(config.uid);
     console.log(localTracks);
@@ -66,6 +122,14 @@ let joinStreams = async() =>{
 
     await client.publish([localTracks.audioTrack, localTracks.videoTrack])
 }
+//function to handle when a user leaves the stream
+let handleUserLeft = async () => {
+
+    delete remoteTracks[user.uid]
+    document.getElementById(`video-wrapper-${user.uid}`)
+
+
+}
 
 //function created for another user joining stream / same channel name
 let handleUserJoined = async(user, mediaType) => {
@@ -74,6 +138,12 @@ let handleUserJoined = async(user, mediaType) => {
     remoteTracks[user.uid] = user
 
     await client.subscribe(user, mediaType)
+
+    let videoPlayer = document.getElementById(`video-wrapper-${user.uid}`)
+    if(videoPlayer != null)
+    {
+        videoPlayer.remove()
+    }
 
     if (mediaType === 'video'){
         let videoPlayer = `<div class="video-containers" id="video-wrapper-${user.uid}"> 

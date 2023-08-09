@@ -8,6 +8,26 @@ body
 
 }
 
+
+#site-title
+{
+    
+}
+
+#join-btn
+{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color:rgb(120, 1, 1);
+    border: none;
+    color: #FF8B8B;
+    font-size: 22px;
+    padding: 20px 30px;
+    cursor: pointer;
+}
+
 main
 {
     width: 1400px;
@@ -16,21 +36,88 @@ main
 
 }
 
-.user-streams
+.icon-wrapper
+{
+    cursor: pointer; 
+    text-align: center;
+}
+
+.control-icon
+{
+    display: block;
+    padding: 15px;
+    height: 20px;
+    width:20px;
+    background-color: aliceblue;
+    border-radius: 10px;
+
+
+}
+
+#user-streams
 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1em;
     height: 100%;
 }
 
+.video-containers
+{
+    position: relative;
+    padding: 0;
+    margin:0;
+    background-color:#FF8B8B;
+    border-radius: 10px;
+}
 
 
 .video-player
 {
-    height: 400px;
+    height: 100%;
     width: 100%;
     border-radius: 10px;
     overflow: hidden;
+}
+
+.user-uid
+{
+    display:block;
+    background-color: rgb(240, 0, 0);
+    padding: 5px 10px;
+    position: absolute;
+    border-radius: 5px;
+    bottom:10px;
+    left: 10px;
+    z-index: 9999;
+    margin: 0;
+    font-size: 18px;
+}
+
+#footer
+{
+    position: fixed;
+    gap: 1em;
+    justify-content: center;
+    display: none;
+    bottom: 0;
+    left: 0;
+    width: 100%
+
+}
+
+@media screen and (max-width:1400px)
+{
+    main {
+        width:95%
+    }
+
+    #user-streams
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1em;
+    height: 100%;
+}
 }
 
