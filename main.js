@@ -3,10 +3,13 @@
 let client = AgoraRTC.createClient({mode:'rtc', codec:"vp8"})
 
 //config to join with agora software
+//TOKEN expires in a day and a half must 
+//generate new one or else there will be an error
+
 let config = 
 {
-    appId:'f8d7134048384cd78bac02b439120d8d', 
-    token: '007eJxTYLh/4vi1iNdqjrJbW5OPfxc9Nn8eQ7ryzsZoW4OkqCsczHMVGNIsUswNjU0MTCyMLUySU8wtkhKTDYySTIwtDY0MUixSxBdcSmkIZGSoP36NhZEBAkF8LobgkqLUxFyn/MpiBgYAEUAhqg==',
+    appId:'', //insert AppID from Agora.io
+    token: '', //insert Token generated from Agora.io project
     uid:null,
     channel: 'StreamBoys'
 }
@@ -18,6 +21,7 @@ let localTracks =
     videoTrack: null
 }
 
+//sets the state for the mute functions, from true and false
 let localTrackState = {
     audioTrackMuted: false,
     videoTrackMuted: false
